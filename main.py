@@ -3,6 +3,7 @@ from mothernature import Environment
 from tornado.web import RequestHandler, Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
+from apps.registry import apps
 
 # Set runtime configurable settings via command line
 define("env", default="DEV", help="Set current environment mode")
@@ -33,17 +34,18 @@ def build_settings(config):
         "static_url_prefix": "/assets/"
     }
 
-def make_app(settings):
+def make_apps(settings, apps):
     """Application Management
 
     Here we register all apps and their routes.
     """
-    return Application([
-        (r"/", MainHandler),
-    ], **settings)
+    return Application(apps.get_routes(), **settings)
 
 if __name__ == "__main__":
     parse_command_line()
-    app = make_app(build_settings(build_env()))
+    settings = build_settings(build_env())
+
+    app = make_apps(settings, apps)
     app.listen(options.port)
+
     IOLoop.current().start()
