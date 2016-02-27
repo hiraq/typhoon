@@ -3,7 +3,7 @@
 ### Description
 
 You can call _Typhoon_ as a skeleton builder and application manager
-for all application based on [Python Tornado Web Framework](http://www.tornadoweb.org).
+for web application based on [Python Tornado Web Framework](http://www.tornadoweb.org).
 
 ### How To Use
 
