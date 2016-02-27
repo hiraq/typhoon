@@ -10,6 +10,7 @@ Tornado is a great python framework for web application or server applications. 
 
 And for the bonus, i tried to add some utilities that maybe we need it every time we start a new project such as for :
 
+- Application Container
 - Environment variables
 - Registry management
 
@@ -53,6 +54,10 @@ After you have done, just look at the structure.  I'll try to create the structu
 
 Put your apps in `apps` folder or just follow the `HelloApp` or `PingApp` as your guidance....and dont forget to use your imagination too :) .
 
+Register your routes inside your application container.  You must create your own container class that inherit from
+`Container` abstract class, and define your routes and name there.
+Register your app into `Registry`  in `apps/registry.py`.
+
 Please remember, that _Typhoon_ is about skeleton or bootstrapper. Feel free to modify the _main.py_ , _container.py_ , or _registry.py_ and use them to fullfill your needs.
 
 ### Application Dependencies
@@ -64,6 +69,10 @@ pip install -r requirements.txt
 ```
 
 Please dont expect any `magic` , and be simple, okay? :)
+
+### Unit Tests
+
+I'm a fan of unit test, but i'm not fanatic.  I just try to figure out how to manage our tests properly.  For now, i'm not decide yet any structures, but inside _Typhoon_ i'm using `unittest2`.
 
 ### How To Run Your Application
 
@@ -80,6 +89,7 @@ This command will run your application on port `8080` (default: `8000`) and use 
 [x] Environment management
 [x] Application container
 [x] Registry management
+[?] Unit tests
 [?] Routes command line
 [?] Application skeleton builder
 [?] Hooks
