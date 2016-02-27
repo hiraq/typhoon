@@ -39,7 +39,7 @@ def make_apps(settings, apps):
 
     Here we register all apps and their routes.
     """
-    return Application(apps, **settings)
+    return Application(apps.get_routes(), **settings)
 
 if __name__ == "__main__":
     parse_command_line()
