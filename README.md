@@ -9,7 +9,7 @@ You can call _Typhoon_ as a bootstrapper and application manager for web applica
 Latest stable branch always at `master` branch.  Development branch always at `dev`.
 
 ```
-Stable: 0.1.0
+Stable: 0.1.1
 ```
 
 ### Rationale
