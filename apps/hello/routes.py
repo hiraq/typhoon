@@ -8,8 +8,8 @@ class MainHandler(RequestHandler):
 class HelloApp(Container):
 
     def routes(self):
-        r = [(r"/hello", MainHandler)]
-        return r
+        routes = [(r"/hello", MainHandler, "GET")]
+        return routes
 
     def name(self):
         return "HelloApp"

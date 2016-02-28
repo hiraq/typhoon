@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-class Container(object):
+class Container:
     """Base Container Application
 
     This class should be used for each application and used to
