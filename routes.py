@@ -3,6 +3,10 @@ from cement.core.controller import CementBaseController, expose
 from apps.registry import apps
 
 class RoutesBaseController(CementBaseController):
+    """Base route list controller
+
+    Used to build cli skeleton for route list
+    """
     class Meta:
         label = 'base'
         description = 'Command Line Tools - Routes'
@@ -12,13 +16,19 @@ class RoutesBaseController(CementBaseController):
         print 'Use: "python routes.py list"'
 
 class RouteListController(CementBaseController):
+    """List of registered routes
+
+    We should show all of registered routes based on app.registry.apps
+    """
     class Meta:
         label = 'list'
         stacked_on = 'base'
 
     @expose(help='List of registered routes', aliases=['list'])
     def list_routes(self):
-        
+        """
+        We should can to list all of registered routes in table's way
+        """
         def build_routes(name, route):
             return [name,route[0], route[1].__name__, route[2]]
 
