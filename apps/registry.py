@@ -1,7 +1,7 @@
 from apps.hello.routes import app as HelloApp
 from apps.ping.routes import app as PingApp
 
-class Registry(object):
+class Registry:
 
     def __init__(self):
         self.__apps = []
@@ -23,7 +23,10 @@ class Registry(object):
         We should load all registered app routes here.
         """
         for app in self.__apps:
-            self.__routes.extend(app.routes())
+            routes = app.routes()
+            for route in routes:
+                data = [(route[0], route[1])]
+                self.__routes.extend(data)
 
     def get_apps(self):
         return self.__apps
