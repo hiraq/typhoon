@@ -30,8 +30,8 @@ def build_settings(config):
         "cookie_secret": uuid.uuid1().hex,
         "xsrf_cookies": config.get('XSRF'),
         "static_hash_cache": config.get('STATIC_HASH_CACHE'),
-        "static_path": "statics",
-        "static_url_prefix": "/assets/"
+        "static_path": "assets",
+        "static_url_prefix": "/statics/"
     }
 
 def make_apps(settings, apps):
