@@ -4,3 +4,4 @@ futures==3.0.5
 mothernature==0.3.0
 cement==2.8.0
 tabulate==0.7.5
+colorlog==2.0.0
