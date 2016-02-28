@@ -104,9 +104,23 @@ pip install -r requirements.txt
 
 Please dont expect any `magic` , and be simple, okay? :)
 
-### Unit Tests
+### Routes CLI
 
-I'm a fan of unit test, but i'm not fanatic.  I just try to figure out how to manage our tests properly.  For now, i'm not decide yet any structures, for the library i'm using `unittest2`.
+Use command :
+
+```
+python routes.py list
+```
+
+results :
+
+```
+| APPLICATION NAME   | PATH   | HANDLER     | METHOD   |
+|--------------------+--------+-------------+----------|
+| HelloApp           | /hello | MainHandler | GET      |
+| PingApp            | /ping  | PingHandler | GET      |
+| PingApp            | /pong  | PongHandler | GET      |
+```
 
 ### How To Run Your Application
 
@@ -139,8 +153,8 @@ For any ideas of improvement, bug / errors can use [github issues](https://githu
 [x] Environment management
 [x] Application container
 [x] Registry management
+[x] Routes command line
 [?] Unit tests
-[?] Routes command line
 [?] Application skeleton builder
 [?] Hooks
 [?] Dockerized
