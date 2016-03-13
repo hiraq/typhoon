@@ -12,6 +12,12 @@ Latest stable branch always at `master` branch.  Development branch always at `d
 Stable: 0.2.1
 ```
 
+Supported python versions:
+
+```
+Python 2.7.x
+```
+
 ### Rationale
 
 Tornado is a great python framework for web application or server applications.  The problem come if we want to start to work for a new project, the problem is we just start it from scratch.  _Typhoon_ **is not a framework** on top of Tornado, the purpose of _Typhoon_ is to make our structures between projects more consistent, and give you (and maybe your team) an idea how to start and manage a new project using Tornado.
