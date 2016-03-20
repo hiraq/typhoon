@@ -1,5 +1,4 @@
 import sys
-import uuid
 from mothernature import Environment
 from tornado.web import RequestHandler, Application
 from tornado.ioloop import IOLoop
@@ -10,21 +9,6 @@ from core.builder import Builder
 # Set runtime configurable settings via command line
 define("env", default="DEV", help="Set current environment mode")
 define("port", default=8080, help="Set port to listen all requests")
-
-def build_settings(config):
-    """Settings Management
-
-    Should be used to configure all important keys.
-    """
-    return {
-        "debug": config.get('DEBUG'),
-        "compress_response": config.get('COMPRESS_RESPONSE'),
-        "cookie_secret": uuid.uuid1().hex,
-        "xsrf_cookies": config.get('XSRF'),
-        "static_hash_cache": config.get('STATIC_HASH_CACHE'),
-        "static_path": "assets",
-        "static_url_prefix": "/statics/"
-    }
 
 def make_apps(settings, apps):
     """Application Management
@@ -39,7 +23,8 @@ if __name__ == "__main__":
 
     try:
 
-        settings = build_settings(build.env('.env', env_name=options.env))
+        configs = build.env('.env', env_name=options.env)
+        settings = build.settings(configs)
         app = make_apps(settings, apps)
         app.listen(options.port)
 

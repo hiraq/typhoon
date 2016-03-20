@@ -68,3 +68,21 @@ class TestTyphoon(unittest.TestCase):
         build = Builder()
         env = build.env('env_test.yml', env_name='TEST')
         self.assertEqual('VALUE1', env.get('KEY1'))
+        self.assertEqual(None, env.get('KEY2'))
+
+    def test_build_settings_success(self):
+        build = Builder()
+        env = build.env('env_test.yml', env_name='TEST')
+        build.settings = MagicMock(return_value={'KEY1': env.get('KEY1')})
+        settings = build.settings(env)
+        self.assertEqual('VALUE1', settings['KEY1'])
+
+    def test_build_settings_error(self):
+        build = Builder()
+        env = build.env('env_test.yml', env_name='TEST')
+        build.settings = MagicMock(return_value={'KEY1': env.get('KEY1')})
+        settings = build.settings(env)
+
+        # should be trigger an exception when try to access unregistered key
+        with self.assertRaises(KeyError):
+            debug = settings['debug']
