@@ -15,7 +15,7 @@ Alpha: 0.2.1
 Supported Python versions : `2.7.x`.
 
 For current version, _Typhoon_ still on active development, the structure and API still on active
-improvement.
+improvement, and i decide to active on unit test.
 
 ### Rationale
 
