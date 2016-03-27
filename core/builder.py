@@ -1,5 +1,7 @@
 import uuid
+import logging
 from mothernature import Environment
+from colorlog import ColoredFormatter
 
 class Builder(object):
 
@@ -48,3 +50,33 @@ class Builder(object):
         }
 
         return setting
+
+    def logs(self, configs, logger):
+        """Set Logging Level
+
+        Use internal Tornado's logging helper.
+
+        Args:
+            self (Builder): Current object instance
+            configs (yaml): Yaml object used to load environment variables
+            logger (callback): Logger function
+        """
+        levels = {
+            'DEBUG': logging.DEBUG,
+            'INFO': logging.INFO,
+            'ERROR': logging.ERROR,
+            'WARNING': logging.WARNING,
+            'CRITICAL': logging.CRITICAL 
+        }
+
+        # Set default logging to logging info
+        log_level = logging.INFO
+        log_level_config = configs.get('LOG_LEVEL')
+
+        # Set if log_level_config available on 
+        # registered levels
+        if log_level_config in levels:
+            log_level = levels[log_level_config]
+
+        # Reset logging level
+        logger.setLevel(log_level)
