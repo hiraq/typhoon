@@ -1,6 +1,7 @@
 import sys
 from mothernature import Environment
-from tornado.web import RequestHandler, Application
+from tornado.log import app_log as logger
+from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
@@ -23,8 +24,17 @@ if __name__ == "__main__":
 
     try:
 
+        logger.info('Initialize Typhoon...')
         configs = build.env('.env', env_name=options.env)
+        build.logs(configs, logger)
+
+        logger.info('Build settings...')
+        logger.debug('Configs: %s', configs)        
+
         settings = build.settings(configs)
+        logger.debug('Settings: %s', settings)
+
+        logger.info('Running IOLoop...')
         app = make_apps(settings, apps)
         app.listen(options.port)
 
