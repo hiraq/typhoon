@@ -1,6 +1,6 @@
 import sys
 from mothernature import Environment
-from tornado.web import RequestHandler, Application
+from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
