@@ -1,38 +1,15 @@
-import uuid
+import sys
 from mothernature import Environment
-from tornado.web import RequestHandler, Application
+from tornado.log import app_log as logger
+from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
+from core.builder import Builder
 
 # Set runtime configurable settings via command line
 define("env", default="DEV", help="Set current environment mode")
 define("port", default=8080, help="Set port to listen all requests")
-
-def build_env():
-    """Environment Management
-
-    We should load all configuration based on current environment mode.
-    Thanks to mothernature -> https://github.com/femmerling/mothernature
-    """
-    env = Environment("env.yml", options.env)
-    config = env.get_config()
-    return config
-
-def build_settings(config):
-    """Settings Management
-
-    Should be used to configure all important keys.
-    """
-    return {
-        "debug": config.get('DEBUG'),
-        "compress_response": config.get('COMPRESS_RESPONSE'),
-        "cookie_secret": uuid.uuid1().hex,
-        "xsrf_cookies": config.get('XSRF'),
-        "static_hash_cache": config.get('STATIC_HASH_CACHE'),
-        "static_path": "assets",
-        "static_url_prefix": "/statics/"
-    }
 
 def make_apps(settings, apps):
     """Application Management
@@ -43,9 +20,37 @@ def make_apps(settings, apps):
 
 if __name__ == "__main__":
     parse_command_line()
-    settings = build_settings(build_env())
+    build = Builder()
 
-    app = make_apps(settings, apps)
-    app.listen(options.port)
+    try:
 
-    IOLoop.current().start()
+        logger.info('Initialize Typhoon...')
+        configs = build.env('.env', env_name=options.env)
+        build.logs(configs, logger)
+
+        logger.info('Build settings...')
+        logger.debug('Configs: %s', configs)        
+
+        settings = build.settings(configs)
+        logger.debug('Settings: %s', settings)
+
+        logger.info('Running IOLoop...')
+        app = make_apps(settings, apps)
+        app.listen(options.port)
+
+        IOLoop.current().start()
+
+    except IOError:
+        """
+        Should be happened when core builder cannot load default dotenv file
+        """
+        print 'Unable to load environment file.'
+        sys.exit()
+
+    except KeyError:
+        """
+        Should be happened when core builder try to load unregistered key from
+        environment configuration file.
+        """
+        print 'Unable to load configuration values.'
+        sys.exit()
