@@ -3,6 +3,9 @@ import os
 sys.path.append(os.path.dirname(os.path.realpath(__file__)) + '/../../')
 
 import unittest
+import logging
+
+from tornado.log import app_log as logger
 from mock import MagicMock
 from core.builder import Builder
 
@@ -86,3 +89,11 @@ class TestTyphoon(unittest.TestCase):
         # should be trigger an exception when try to access unregistered key
         with self.assertRaises(KeyError):
             debug = settings['debug']
+
+    def test_build_logs_set_level(self):
+        build = Builder()
+        env = build.env('env_test.yml', env_name='TEST')
+        self.assertEqual('DEBUG', env.get('LOG_LEVEL'))
+
+        build.logs(env, logger)
+        self.assertEqual(logging.DEBUG, logger.getEffectiveLevel())
