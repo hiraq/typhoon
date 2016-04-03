@@ -1,5 +1,5 @@
 from tornado.web import RequestHandler
-from apps.container import Container
+from core.container import Container
 
 class PingHandler(RequestHandler):
     def get(self):
