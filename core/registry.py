@@ -1,4 +1,6 @@
+import logging as logger
 from core.container import Container 
+from core.exceptions.application import ContainerError
 
 class Registry:
     """Core.Registry
@@ -20,15 +22,22 @@ class Registry:
             self (Core.Registry): Current object instance
             app (Core.Container): App class
         """
+        try:
 
-        # We have to make sure if current app implement Core.Container
-        assert isinstance(app, Container), "All app should be implement Core.Container abstract class."
+            # We have to make sure if current app implement Core.Container
+            # This assertions is important, we need to check all registered app
+            assert isinstance(app, Container), "All app should be implement Core.Container abstract class."
 
-        # Register application        
-        self.__apps.append(app)
+            # Register application        
+            self.__apps.append(app)
 
-        # after app registered, we should parse their routes
-        self.__app_routes()
+            # after app registered, we should parse their routes
+            self.__app_routes()
+
+        except AssertionError:
+
+            # raise custom exception to indicate cannot use registered app
+            raise ContainerError(app.__class__.__name__)
 
     def __app_routes(self):
         """Binding routes
@@ -41,8 +50,21 @@ class Registry:
                 data = [(route[0], route[1])]
                 self.__routes.extend(data)
 
+        # remove duplicate values from list of routes
+        self.__routes = list(set(self.__routes))
+
     def get_apps(self):
+        """Get all registered applications
+
+        Returns:
+            list of applications
+        """
         return self.__apps
 
     def get_routes(self):
+        """Get all parsed routes from all registered applications
+
+        Returns:
+            list of routes from many apps    
+        """
         return self.__routes
