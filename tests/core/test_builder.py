@@ -24,7 +24,7 @@ class FakeYamlObject(object):
     def get(self, key):
         self.props[key]
 
-class TestTyphoon(unittest.TestCase):
+class TestBuilder(unittest.TestCase):
 
     def test_build_env_mock_simple(self):
         """
