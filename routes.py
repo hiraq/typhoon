@@ -30,9 +30,12 @@ class RouteListController(CementBaseController):
         We should can to list all of registered routes in table's way
         """
         def build_routes(name, route):
-            return [name,route[0], route[1].__name__, route[2]]
+            if len(route) == 4:
+                return [name,route[0], route[1].__name__, route[2], route[3]]
+            else:
+                return [name,route[0], route[1].__name__, route[2], '-']
 
-        headers = ['APPLICATION NAME','PATH', 'HANDLER', 'METHOD']
+        headers = ['APPLICATION NAME','PATH', 'HANDLER', 'METHOD', 'ROUTE NAME']
         data = []
         for app in apps.get_apps():
             routes = app.routes()
