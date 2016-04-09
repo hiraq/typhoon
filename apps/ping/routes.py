@@ -1,5 +1,5 @@
 from tornado.web import RequestHandler
-from apps.container import Container
+from core.container import Container
 
 class PingHandler(RequestHandler):
     def get(self):
@@ -12,7 +12,7 @@ class PongHandler(RequestHandler):
 class PingApp(Container):
 
     def routes(self):
-        routes = [(r"/ping", PingHandler, "GET"), (r"/pong", PongHandler, "GET")]
+        routes = [(r"/ping", PingHandler, "GET", "get_ping"), (r"/pong", PongHandler, "GET", "get_pong")]
         return routes
 
     def name(self):

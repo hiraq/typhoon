@@ -1,42 +1,22 @@
 from apps.hello.routes import app as HelloApp
 from apps.ping.routes import app as PingApp
+from core.registry import Registry
+from core.exceptions.application import ContainerError
 
-class Registry:
+try:
 
-    def __init__(self):
-        self.__apps = []
-        self.__routes = []
+    """
+    You should register all of your apps here.
+    """
+    apps = Registry()
+    apps.register(HelloApp)
+    apps.register(PingApp)
 
-    def register(self, app):
-        """Register application
+except ContainerError, e:
 
-        Each app should be an instance of Container abstract class
-        """
-        self.__apps.append(app)
-
-        # after app registered, we should parse their routes
-        self.__app_routes()
-
-    def __app_routes(self):
-        """Binding routes
-
-        We should load all registered app routes here.
-        """
-        for app in self.__apps:
-            routes = app.routes()
-            for route in routes:
-                data = [(route[0], route[1])]
-                self.__routes.extend(data)
-
-    def get_apps(self):
-        return self.__apps
-
-    def get_routes(self):
-        return self.__routes
-
-"""
-You should register all of your apps here.
-"""
-apps = Registry()
-apps.register(HelloApp)
-apps.register(PingApp)
+    """
+    I cannot use logging here.  If i use default logging here,
+    it will reset all tornado's logging configurations, so i just
+    use simple print statement.
+    """
+    print e.message 
