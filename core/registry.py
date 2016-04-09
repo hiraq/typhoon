@@ -47,7 +47,34 @@ class Registry:
         for app in self.__apps:
             routes = app.routes()
             for route in routes:
-                data = [(route[0], route[1])]
+
+                """
+                Tornado URLSpec depends on :
+                - pattern
+                - handler
+                - kwargs (optional)
+                - name (optional)
+
+                Source: http://www.tornadoweb.org/en/stable/web.html#tornado.web.URLSpec
+
+                Based on this documentation, we need to check if current registered route
+                has a route name for reverse_url or not.
+
+                kwargs act as additional arguments passed to handler constructor
+
+                - route[0]: pattern
+                - route[1]: handler
+                - route[3]: route name
+
+                Everything listed here, only used by tornado.Application.URLSpec.  I'm not
+                use route[2] here, because route[2] used as additional information for http methods
+                (GET, POST, PUT, DELETE) at routes.py command line interface.
+                """
+                if len(route) == 4:
+                    data = [(route[0], route[1], None, route[3])]
+                else:
+                    data = [(route[0], route[1], None, None)]
+
                 self.__routes.extend(data)
 
         # remove duplicate values from list of routes
