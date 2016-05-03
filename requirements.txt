@@ -10,3 +10,4 @@ pymongo==2.8.0
 greenlet==0.4.9
 mock==1.0.1
 coverage==4.0.3
+torndsession==1.1.4
