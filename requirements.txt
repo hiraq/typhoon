@@ -11,3 +11,5 @@ greenlet==0.4.9
 mock==1.0.1
 coverage==4.0.3
 torndsession==1.1.4
+redis==2.10.5
+python-memcached==1.57
