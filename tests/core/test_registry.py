@@ -36,6 +36,14 @@ class FakeApp3(object):
     """
     pass
 
+class FakeApp4(Container):
+    def routes(self):
+        routes = [(r"/testing3", FakeHandler, "GET", "testing")]
+        return routes
+
+    def name(self):
+        return "FakeApp4"
+
 class TestRegistry(unittest.TestCase):
 
     def test_build_registry(self):
@@ -43,11 +51,12 @@ class TestRegistry(unittest.TestCase):
         reg = Registry()
         reg.register(FakeApp1())
         reg.register(FakeApp2())
+        reg.register(FakeApp4())
 
         # check if list of apps is not empty list
         self.assertIsNot(reg.get_apps(), [])
-        self.assertEqual(2, len(reg.get_apps()))
-        self.assertEqual(2, len(reg.get_routes()))
+        self.assertEqual(3, len(reg.get_apps()))
+        self.assertEqual(3, len(reg.get_routes()))
 
     def test_container_error(self):
 
