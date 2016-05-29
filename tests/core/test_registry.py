@@ -52,6 +52,10 @@ class TestRegistry(unittest.TestCase):
     def test_container_error(self):
 
         # test if application not implement container abstract class
-        with self.assertRaises(ContainerError):
+        with self.assertRaises(ContainerError) as container_error:
             reg = Registry()
             reg.register(FakeApp3())
+
+        exception = container_error.exception
+        self.assertEqual('FakeApp3', exception.app_name)
+        self.assertEqual('ContainerError: Cannot use FakeApp3 as container application', exception.message)
