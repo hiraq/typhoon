@@ -9,7 +9,7 @@ You can call _Typhoon_ as a bootstrapper and application manager for web applica
 Latest release branch always at `master` branch.  Development branch always at `dev`.
 
 ```
-Alpha: 0.3.1
+Alpha: 0.4.0
 ```
 Supported Python versions : `2.7.x`.
 
@@ -28,10 +28,12 @@ Tornado is a great python framework for web application or server applications. 
 
 And for the bonus, i tried to add some utilities that maybe we need it every time we start a new project such as for :
 
+
 - Environment variables
-- Application Container
-- Registry management
+- Session management
+- Unit & integration tests
 - CLI Tools: routes, builder
+- Dockerized
 
 ### Logic
 
