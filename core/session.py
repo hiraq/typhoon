@@ -64,7 +64,7 @@ class Session(object):
         setting, so we need to check it first before
         we build our redis configurations
         """
-        if 'max_connections' in redis_env:
+        if 'MAX_CONNECTIONS' in redis_env:
             max_conn = redis_env['MAX_CONNECTIONS']
         else:
             max_conn = 1024
@@ -75,7 +75,7 @@ class Session(object):
         has that key or not, and if not just set it
         to None.
         """
-        if 'password' in redis_env:
+        if 'PASSWORD' in redis_env:
             password = redis_env['PASSWORD']
         else:
             password = None
