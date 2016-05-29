@@ -62,6 +62,27 @@ class TestSession(unittest.TestCase):
         self.assertEqual(7700,session_settings['driver_settings']['port'])
         self.assertEqual(1,session_settings['driver_settings']['db'])
 
+    def test_redis_optional_keys(self):
+        redis = FakeYamlObject()
+        redis.set('SESSION_ENGINE', 'REDIS')
+        redis.set('SESSION_DRIVERS', dict(
+            REDIS = dict(
+                HOST = 'localhost',
+                PORT = 7700,
+                DB = 1,
+                MAX_CONNECTIONS = 2048,
+                PASSWORD = 'testing'
+            )
+        ))
+
+        session = Session(redis.as_dict())
+        session_settings = session.get_used_config()
+
+        self.assertEqual('redis',session_settings['driver'])
+        self.assertEqual(2048,session_settings['driver_settings']['max_connections'])
+        self.assertEqual('testing',session_settings['driver_settings']['password'])
+
+
     def test_memcache_dict(self):
         session = Session(self.memcache.as_dict())
         session_settings = session.get_used_config()
