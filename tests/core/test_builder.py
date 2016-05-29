@@ -16,7 +16,8 @@ class FakeYamlObject(object):
     method to add key, value
     """
 
-    props = {}
+    def __init__(self):
+        self.props = {}
 
     def set(self, key, value):
         self.props[key] = value
@@ -97,3 +98,10 @@ class TestBuilder(unittest.TestCase):
 
         build.logs(env, logger)
         self.assertEqual(logging.DEBUG, logger.getEffectiveLevel())
+
+    def test_build_settings_real(self):
+        build = Builder()
+        config = build.env('env_test.yml')
+
+        settings = build.settings(config)
+        self.assertIn('session', settings)
