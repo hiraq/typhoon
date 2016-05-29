@@ -105,3 +105,10 @@ class TestBuilder(unittest.TestCase):
 
         settings = build.settings(config)
         self.assertIn('session', settings)
+
+    def test_build_settings_no_session(self):
+        build = Builder()
+        config = build.env('env_test.yml', env_name="DEV_NO_SESSION")
+
+        settings = build.settings(config)
+        self.assertNotIn('session', settings)
