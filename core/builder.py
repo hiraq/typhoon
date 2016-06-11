@@ -1,5 +1,6 @@
 import uuid
 import logging
+from core.session import Session
 from mothernature import Environment
 from colorlog import ColoredFormatter
 
@@ -39,6 +40,11 @@ class Builder(object):
         Returns:
             Dictionaries
         """
+
+        # build session configurations
+        session = Session(config)
+        session_settings = session.get_used_config()
+
         setting = {
             "debug": config.get('DEBUG'),
             "compress_response": config.get('COMPRESS_RESPONSE'),
@@ -46,8 +52,13 @@ class Builder(object):
             "xsrf_cookies": config.get('XSRF'),
             "static_hash_cache": config.get('STATIC_HASH_CACHE'),
             "static_path": config.get('STATIC_PATH'),
-            "static_url_prefix": config.get('STATIC_URL_PREFIX') 
+            "static_url_prefix": config.get('STATIC_URL_PREFIX')
         }
+
+        # We doesn't need to add session settings if current
+        # lifecycle just give us an empty dictionary
+        if len(session_settings.keys()) > 0:
+            setting.update(session = session_settings)
 
         return setting
 
@@ -66,14 +77,14 @@ class Builder(object):
             'INFO': logging.INFO,
             'ERROR': logging.ERROR,
             'WARNING': logging.WARNING,
-            'CRITICAL': logging.CRITICAL 
+            'CRITICAL': logging.CRITICAL
         }
 
         # Set default logging to logging info
         log_level = logging.INFO
         log_level_config = configs.get('LOG_LEVEL')
 
-        # Set if log_level_config available on 
+        # Set if log_level_config available on
         # registered levels
         if log_level_config in levels:
             log_level = levels[log_level_config]
