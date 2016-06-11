@@ -6,6 +6,7 @@ from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
 from core.builder import Builder
+from core.mongo import mongo_configurations
 
 # Set runtime configurable settings via command line
 define("env", default="DEV", help="Set current environment mode")
@@ -29,12 +30,16 @@ if __name__ == "__main__":
         build.logs(configs, logger)
 
         logger.info('Build settings...')
-        logger.debug('Configs: %s', configs)        
+        logger.debug('Configs: %s', configs)
 
         settings = build.settings(configs)
-        logger.debug('Settings: %s', settings)
 
+        # merge with motor settings
+        settings.update(motor = mongo_configurations(configs))
+
+        logger.debug('Settings: %s', settings)
         logger.info('Running IOLoop...')
+        
         app = make_apps(settings, apps)
         app.listen(options.port)
 
