@@ -15,10 +15,12 @@ class MongoHandler(BaseRequestHandler):
         docs = yield self.coll.find_one({'email': 'test@test.com'})
         pprint.pprint(docs)
 
-        self.write('Email: {}'.format(docs['email']))
-        self.write("\n")
-        self.write('ObjectID: {}'.format(str(docs['_id'])))
-        self.write("\n")
+        response = dict(
+            object_id = str(docs['_id']),
+            email = docs['email']
+        )
+
+        self.write(response)
         self.finish()
 
     @gen.coroutine
@@ -27,8 +29,11 @@ class MongoHandler(BaseRequestHandler):
         result = yield future
         pprint.pprint(result)
 
-        self.write('ObjectID: {}'.format(str(result)))
-        self.write("\n")
+        response = dict(
+            object_id = str(result)
+        )
+
+        self.write(response)
         self.finish()
 
 class MongoApp(Container):
