@@ -1,7 +1,7 @@
-from tornado.web import RequestHandler
+from core.base import BaseRequestHandler
 from core.container import Container
 
-class MainHandler(RequestHandler):
+class MainHandler(BaseRequestHandler):
     def get(self):
         self.write('Hello World')
 

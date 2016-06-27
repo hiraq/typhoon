@@ -2,3 +2,4 @@
 *.pyc
 3.5
 *env
+.coverage

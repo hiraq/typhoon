@@ -1,11 +1,11 @@
-from tornado.web import RequestHandler
+from core.base import BaseRequestHandler
 from core.container import Container
 
-class PingHandler(RequestHandler):
+class PingHandler(BaseRequestHandler):
     def get(self):
         self.write('pong')
 
-class PongHandler(RequestHandler):
+class PongHandler(BaseRequestHandler):
     def get(self):
         self.write('ping')
 
