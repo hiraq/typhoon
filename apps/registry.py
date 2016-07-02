@@ -1,5 +1,6 @@
 from apps.hello.routes import app as HelloApp
 from apps.ping.routes import app as PingApp
+from apps.mongo.routes import app as MongoApp
 from core.registry import Registry
 from core.exceptions.application import ContainerError
 
@@ -11,6 +12,7 @@ try:
     apps = Registry()
     apps.register(HelloApp)
     apps.register(PingApp)
+    apps.register(MongoApp)
 
 except ContainerError, e:
 
@@ -19,4 +21,4 @@ except ContainerError, e:
     it will reset all tornado's logging configurations, so i just
     use simple print statement.
     """
-    print e.message 
+    print e.message
