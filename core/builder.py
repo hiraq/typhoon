@@ -6,7 +6,7 @@ from colorlog import ColoredFormatter
 
 class Builder(object):
 
-    def env(self, env_file, env_name="DEV"):
+    def env(self, env_file):
         """Environment Management
 
         We should load all configuration based on current environment mode.

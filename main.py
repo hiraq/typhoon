@@ -1,5 +1,4 @@
 import sys
-from mothernature import Environment
 from tornado.log import app_log as logger
 from tornado.web import Application
 from tornado.ioloop import IOLoop
@@ -9,7 +8,6 @@ from core.builder import Builder
 from core.mongo import mongo_configurations
 
 # Set runtime configurable settings via command line
-define("env", default="DEV", help="Set current environment mode")
 define("port", default=8080, help="Set port to listen all requests")
 
 def make_apps(settings, apps):
@@ -26,24 +24,24 @@ if __name__ == "__main__":
     try:
 
         logger.info('Initialize Typhoon...')
-        configs = build.env('.env', env_name=options.env)
+        configs = build.env('.env')
         build.logs(configs, logger)
 
         logger.info('Build settings...')
         logger.debug('Configs: %s', configs)
 
-        settings = build.settings(configs)
+        # settings = build.settings(configs)
 
         # merge with motor settings
-        settings.update(motor = mongo_configurations(configs))
+        # settings.update(motor = mongo_configurations(configs))
 
-        logger.debug('Settings: %s', settings)
-        logger.info('Running IOLoop...')
-        
-        app = make_apps(settings, apps)
-        app.listen(options.port)
+        # logger.debug('Settings: %s', settings)
+        # logger.info('Running IOLoop...')
 
-        IOLoop.current().start()
+        # app = make_apps(settings, apps)
+        # app.listen(options.port)
+        #
+        # IOLoop.current().start()
 
     except IOError:
         """
