@@ -1,6 +1,6 @@
-import os
 import uuid
 import logging
+import os
 from dotenv import load_dotenv
 from core.session import Session
 from colorlog import ColoredFormatter
@@ -40,6 +40,10 @@ class Builder(object):
 
         Build settings which will loaded by Tornado.  All configuration
         fetch from os environment variables.
+
+        Current settings should be only for default global Tornado settings,
+        like debug, cookie_secret and others.  It's should not handle any external
+        settings like session or mongo settings.
 
         Returns:
             Dictionaries
