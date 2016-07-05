@@ -8,7 +8,7 @@ from tornado.options import define, options, parse_command_line
 from apps.registry import apps
 from core.builder import Builder
 from core.environment import Environment
-from core.mongo import mongo_configurations
+from core.setting import mongo, session
 
 # Set runtime configurable settings via command line
 define("env", default=".env", help="Set default env file")
@@ -43,11 +43,14 @@ if __name__ == "__main__":
         # ENV_NAME (DEV, TEST, STAGING, PRODUCTION)
         logger.info('Build settings...')
         settings = build.settings(Environment(os.environ.get('ENV_NAME')))
-        logger.debug('Settings: %s', settings)
 
         # merge with motor settings
-        settings.update(motor = mongo_configurations())
+        settings.update(motor = mongo.settings())
 
+        # merge with session settings
+        settings.update(session = session.settings())
+
+        logger.debug('Settings: %s', settings)
         logger.info('Running IOLoop...')
 
         app = make_apps(settings, apps)
