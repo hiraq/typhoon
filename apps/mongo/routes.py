@@ -39,7 +39,7 @@ class MongoHandler(BaseRequestHandler):
 class MongoApp(Container):
 
     def routes(self):
-        routes = [(r"/mongo", MongoHandler, "GET")]
+        routes = [(r"/mongo", MongoHandler)]
         return routes
 
     def name(self):
