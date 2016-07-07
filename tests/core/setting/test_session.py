@@ -7,7 +7,7 @@ import logging
 
 from tornado.log import app_log as logger
 from mock import MagicMock, patch
-from core.setting.session import Session, session_settings
+from core.setting.session import Session, settings
 
 class TestSession(unittest.TestCase):
 
@@ -98,7 +98,7 @@ class TestSession(unittest.TestCase):
         )
 
         fake_os.environ = dict_session
-        sess_config = session_settings()
+        sess_config = settings()
         self.assertTrue(len(sess_config) >= 1)
         self.assertEqual(sess_config['driver'], 'memcached')
         self.assertEqual(sess_config['driver_settings']['host'], 'localhost')

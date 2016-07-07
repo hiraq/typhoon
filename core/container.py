@@ -13,7 +13,9 @@ class Container:
     @abstractmethod
     def routes(self):
         """
-        Should be used for register any routes of app
+        Should be used for register any routes of app and return
+        a list of tuple that contain route url (required), handler (required)
+        and route name (optional)
         """
         pass
 
