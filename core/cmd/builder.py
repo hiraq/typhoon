@@ -5,4 +5,4 @@ def cli():
     """
     This core cli apps used to create skeleton apps
     """
-    click.echo('cmd2')
+    click.echo('core:builder called')
