@@ -12,7 +12,7 @@ class PongHandler(BaseRequestHandler):
 class PingApp(Container):
 
     def routes(self):
-        routes = [(r"/ping", PingHandler, "GET", "get_ping"), (r"/pong", PongHandler, "GET", "get_pong")]
+        routes = [(r"/ping", PingHandler, "get_ping"), (r"/pong", PongHandler, "GET", "get_pong")]
         return routes
 
     def name(self):

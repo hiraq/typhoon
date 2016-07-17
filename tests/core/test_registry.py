@@ -16,7 +16,7 @@ class FakeHandler(object):
 
 class FakeApp1(Container):
     def routes(self):
-        routes = [(r"/testing1", FakeHandler, "GET")]
+        routes = [(r"/testing1", FakeHandler)]
         return routes
 
     def name(self):
@@ -24,7 +24,7 @@ class FakeApp1(Container):
 
 class FakeApp2(Container):
     def routes(self):
-        routes = [(r"/testing2", FakeHandler, "GET")]
+        routes = [(r"/testing2", FakeHandler)]
         return routes
 
     def name(self):
@@ -38,7 +38,7 @@ class FakeApp3(object):
 
 class FakeApp4(Container):
     def routes(self):
-        routes = [(r"/testing3", FakeHandler, "GET", "testing")]
+        routes = [(r"/testing3", FakeHandler, "testing")]
         return routes
 
     def name(self):

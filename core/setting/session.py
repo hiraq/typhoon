@@ -1,8 +1,9 @@
+import os
+
 class Session(object):
 
     def __init__(self, config):
-        self.engine = config.get('SESSION_ENGINE')
-        self.env_settings = config.get('SESSION_DRIVERS')
+        self.config = config
 
     def get_used_config(self):
         """Get Supported Session Configurations
@@ -19,9 +20,9 @@ class Session(object):
             just an empty dictionary if current choosen engine not
             supported yet.
         """
-        if self.engine == 'REDIS':
+        if self.config['SESSION_ENGINE'] == 'REDIS':
             return self.__get_redis_config()
-        elif self.engine == 'MEMCACHE':
+        elif self.config['SESSION_ENGINE'] == 'MEMCACHE':
             return self.__get_memcache_config()
         else:
             return dict()
@@ -37,12 +38,11 @@ class Session(object):
             configurations
 
         """
-        memcache_env = self.env_settings['MEMCACHE']
         return dict(
             driver = 'memcached',
             driver_settings = dict(
-                host = memcache_env['HOST'],
-                port = memcache_env['PORT']
+                host = self.config['SESSION_MEMCACHE_HOST'],
+                port = self.config['SESSION_MEMCACHE_PORT']
             )
         )
 
@@ -57,15 +57,14 @@ class Session(object):
             all redis related configurations.
 
         """
-        redis_env = self.env_settings['REDIS']
 
         """
         It's because max_connections is a optional
         setting, so we need to check it first before
         we build our redis configurations
         """
-        if 'MAX_CONNECTIONS' in redis_env:
-            max_conn = redis_env['MAX_CONNECTIONS']
+        if 'SESSION_REDIS_MAX_CONNECTIONS' in self.config:
+            max_conn = self.config['SESSION_REDIS_MAX_CONNECTIONS']
         else:
             max_conn = 1024
 
@@ -75,20 +74,24 @@ class Session(object):
         has that key or not, and if not just set it
         to None.
         """
-        if 'PASSWORD' in redis_env:
-            password = redis_env['PASSWORD']
+        if 'SESSION_REDIS_PASSWORD' in self.config:
+            password = self.config['SESSION_REDIS_PASSWORD']
         else:
             password = None
 
         session_settings = dict(
             driver = 'redis',
             driver_settings = dict(
-                host = redis_env['HOST'],
-                port = redis_env['PORT'],
-                db = redis_env['DB'],
+                host = self.config['SESSION_REDIS_HOST'],
+                port = self.config['SESSION_REDIS_PORT'],
+                db = self.config['SESSION_REDIS_DB'],
                 max_connections = max_conn,
                 password = password
             )
         )
 
         return session_settings
+
+def settings():
+    session = Session(os.environ)
+    return session.get_used_config()
