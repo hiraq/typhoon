@@ -47,14 +47,25 @@ class TestRoutes(AsyncHTTPTestCase):
         self.assertTrue(total < 1)
 
     def test_post_then_get(self):
+
+        payload = {
+            'email': 'test@test.com'
+        }
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+
         coll = mongo_coll()
-        post = self.fetch('/mongo', method="POST", allow_nonstandard_methods=True)
+        post = self.fetch('/mongo', headers=headers, method="POST", body=json.dumps(payload))
         self.assertEqual(post.code, 200)
 
         body = json.loads(post.body)
         self.assertIsNotNone(body['object_id'])
 
-        get = self.fetch('/mongo')
+        get = self.fetch('/mongo?email=test@test.com')
         body_get = json.loads(get.body)
         self.assertIsNotNone(body_get['object_id'])
         self.assertIsNotNone(body_get['email'])
+        self.assertEqual(body_get['email'], 'test@test.com')

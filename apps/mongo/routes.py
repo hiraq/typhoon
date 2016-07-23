@@ -2,8 +2,13 @@ import pprint
 from tornado import gen
 from core.base import BaseRequestHandler
 from core.container import Container
+from webargs import fields
 
 class MongoHandler(BaseRequestHandler):
+
+    mongo_handler_args = {
+        'email': fields.Email(required=True)
+    }
 
     def initialize(self):
         self.motor = self.settings['motor']
@@ -12,7 +17,8 @@ class MongoHandler(BaseRequestHandler):
 
     @gen.coroutine
     def get(self):
-        docs = yield self.coll.find_one({'email': 'test@test.com'})
+        reqargs = self.parse_request(self.mongo_handler_args)
+        docs = yield self.coll.find_one({'email': reqargs['email']})
         pprint.pprint(docs)
 
         response = dict(
@@ -25,7 +31,8 @@ class MongoHandler(BaseRequestHandler):
 
     @gen.coroutine
     def post(self):
-        future = self.coll.insert({'email': 'test@test.com'})
+        reqargs = self.parse_request(self.mongo_handler_args)
+        future = self.coll.insert({'email': reqargs['email']})
         result = yield future
         pprint.pprint(result)
 
