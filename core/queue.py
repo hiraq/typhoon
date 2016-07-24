@@ -9,20 +9,15 @@ class TQueue(object):
         self._queue = Queue(maxsize=maxsize)
         self._pause = pause
         self._items = list()
-        self._queue_empty = False
 
     def register_callback(self, callback):
         self._callback = callback
 
     def put(self, item):
         self._items.append(item)
-        self._queue_empty = False
 
     def is_item_exists(self):
         return True if len(self._items) > 0 else False
-
-    def is_queue_empty(self):
-        return self._queue_empty
 
     @gen.coroutine
     def listen(self):
@@ -36,9 +31,6 @@ class TQueue(object):
                 yield gen.sleep(self._pause)
                 yield self._callback(item)
 
-            except QueueEmpty:
-                self._queue_empty = True
-
             finally:
 
                 self._queue.task_done()
@@ -48,6 +40,7 @@ class TQueue(object):
         for item in self._items:
             yield self._queue.put(item)
 
+    @gen.coroutine
     def run(self):
-        self._broadcast()
+        yield self._broadcast()
         IOLoop.current().spawn_callback(self.listen)
