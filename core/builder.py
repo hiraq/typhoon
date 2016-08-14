@@ -1,93 +1,67 @@
 import uuid
 import logging
+import os
+from dotenv import load_dotenv
 from core.session import Session
-from mothernature import Environment
 from colorlog import ColoredFormatter
+
+logger = logging.getLogger('tornado.general')
 
 class Builder(object):
 
-    def env(self, env_file, env_name="DEV"):
+    def env(self, env_file):
         """Environment Management
 
-        We should load all configuration based on current environment mode.
-        Thanks to mothernature -> https://github.com/femmerling/mothernature
+        Previous implementation is using `mothernature` to manage
+        our environment variables.  For now, i'm change it into
+        python-dotenv that support with os environment variables.
+
+        What we need to do here is we just need to load .env file,
+        and python-dotenv will automatically will inject all key variables
+        into os environment.
+
+        Why we need to wrap this simple function into class method ? Because
+        previous implementation has a logic inside this method, and i still
+        to make it as class method, so if we have a changes in the future,
+        we working on this method, not at the caller.
 
         Args:
-            self (Builder): Current object instance
-            env_file (str): Yaml file that need to load
-            env_name (Optional[str]): Environment name that needed to load on
-                initialize engine.  By default is DEV.
+            env_file (str): .env that need to load
 
         Returns:
-            Yaml object
+            Boolean or None.  Return true if .env file can be loaded and
+            return None if .env file not found.
 
-        Raises:
-            IOError: If given yaml file not found
         """
-        env = Environment(env_file, env_name)
-        config = env.get_config()
-        return config
+        return load_dotenv(env_file)
 
-    def settings(self, config):
+    def settings(self, env):
         """Tornado Settings
 
-        Build settings which will loaded by Tornado.
+        Build settings which will loaded by Tornado.  All configuration
+        fetch from os environment variables.
 
-        Args:
-            self (Builder): Current object instance
-            configs (yaml): Yaml object used to load environment variables
+        Current settings should be only for default global Tornado settings,
+        like debug, cookie_secret and others.  It's should not handle any external
+        settings like session or mongo settings.
 
         Returns:
             Dictionaries
-        """
 
-        # build session configurations
-        session = Session(config)
-        session_settings = session.get_used_config()
+        Raises:
+            Raise a KeyError if current configs doesn't have any key value
+        """
+        if len(env) < 1:
+            raise KeyError
 
         setting = {
-            "debug": config.get('DEBUG'),
-            "compress_response": config.get('COMPRESS_RESPONSE'),
+            "debug": env.get('DEBUG'),
+            "compress_response": env.get('COMPRESS_RESPONSE'),
             "cookie_secret": uuid.uuid1().hex,
-            "xsrf_cookies": config.get('XSRF'),
-            "static_hash_cache": config.get('STATIC_HASH_CACHE'),
-            "static_path": config.get('STATIC_PATH'),
-            "static_url_prefix": config.get('STATIC_URL_PREFIX')
+            "xsrf_cookies": env.get('XSRF'),
+            "static_hash_cache": env.get('STATIC_HASH_CACHE'),
+            "static_path": os.environ.get('STATIC_PATH'),
+            "static_url_prefix": os.environ.get('STATIC_URL_PREFIX')
         }
-
-        # We doesn't need to add session settings if current
-        # lifecycle just give us an empty dictionary
-        if len(session_settings.keys()) > 0:
-            setting.update(session = session_settings)
 
         return setting
-
-    def logs(self, configs, logger):
-        """Set Logging Level
-
-        Use internal Tornado's logging helper.
-
-        Args:
-            self (Builder): Current object instance
-            configs (yaml): Yaml object used to load environment variables
-            logger (callback): Logger function
-        """
-        levels = {
-            'DEBUG': logging.DEBUG,
-            'INFO': logging.INFO,
-            'ERROR': logging.ERROR,
-            'WARNING': logging.WARNING,
-            'CRITICAL': logging.CRITICAL
-        }
-
-        # Set default logging to logging info
-        log_level = logging.INFO
-        log_level_config = configs.get('LOG_LEVEL')
-
-        # Set if log_level_config available on
-        # registered levels
-        if log_level_config in levels:
-            log_level = levels[log_level_config]
-
-        # Reset logging level
-        logger.setLevel(log_level)

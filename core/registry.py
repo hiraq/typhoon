@@ -1,5 +1,5 @@
 import logging as logger
-from core.container import Container 
+from core.container import Container
 from core.exceptions.application import ContainerError
 
 class Registry:
@@ -28,7 +28,7 @@ class Registry:
             # This assertions is important, we need to check all registered app
             assert isinstance(app, Container), "All app should be implement Core.Container abstract class."
 
-            # Register application        
+            # Register application
             self.__apps.append(app)
 
             # after app registered, we should parse their routes
@@ -64,14 +64,12 @@ class Registry:
 
                 - route[0]: pattern
                 - route[1]: handler
-                - route[3]: route name
+                - route[2]: route name
 
-                Everything listed here, only used by tornado.Application.URLSpec.  I'm not
-                use route[2] here, because route[2] used as additional information for http methods
-                (GET, POST, PUT, DELETE) at routes.py command line interface.
+                Everything listed here, only used by tornado.Application.URLSpec.
                 """
-                if len(route) == 4:
-                    data = [(route[0], route[1], None, route[3])]
+                if len(route) == 3:
+                    data = [(route[0], route[1], None, route[2])]
                 else:
                     data = [(route[0], route[1], None, None)]
 
@@ -92,6 +90,6 @@ class Registry:
         """Get all parsed routes from all registered applications
 
         Returns:
-            list of routes from many apps    
+            list of routes from many apps
         """
         return self.__routes

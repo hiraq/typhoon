@@ -1,5 +1,6 @@
 from tornado.web import RequestHandler
 from torndsession.session import SessionMixin
+from webargs.tornadoparser import parser
 
 class BaseRequestHandler(RequestHandler, SessionMixin):
     """
@@ -18,3 +19,10 @@ class BaseRequestHandler(RequestHandler, SessionMixin):
         save session contents.
         """
         self.session.flush()
+
+    def parse_request(self, args):
+        """HTTP Request Parser
+
+        Parse request parameters from any HTTP methods
+        """
+        return parser.parse(args, self.request)

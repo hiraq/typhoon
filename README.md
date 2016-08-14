@@ -9,18 +9,12 @@ You can call _Typhoon_ as a bootstrapper and application manager for web applica
 Latest release branch always at `master` branch.  Development branch always at `dev`.
 
 ```
-Alpha: 0.4.0
+Alpha: 0.5.0
 ```
 Supported Python versions : `2.7.x`.
 
 For current version, _Typhoon_ still on active development, the structure and API still on active
-improvement, and i decide to active on unit test.
-
-Supported python versions:
-
-```
-Python 2.7.x
-```
+improvement.
 
 ### Rationale
 
@@ -32,6 +26,7 @@ And for the bonus, i tried to add some utilities that maybe we need it every tim
 - Environment variables
 - Session management
 - Unit & integration tests
+- Use Motor as main database driver for Mongo
 - CLI Tools: routes, builder
 - Dockerized
 

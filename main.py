@@ -1,15 +1,19 @@
 import sys
-from mothernature import Environment
+import os
+from os.path import dirname, abspath
 from tornado.log import app_log as logger
 from tornado.web import Application
 from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
 from core.builder import Builder
+from core.environment import load_yaml_env
+from core.setting import mongo, session
 
 # Set runtime configurable settings via command line
-define("env", default="DEV", help="Set current environment mode")
+define("env", default=".env", help="Set default env file")
 define("port", default=8080, help="Set port to listen all requests")
+define("addr", default="localhost", help="Set ip address to listen")
 
 def make_apps(settings, apps):
     """Application Management
@@ -19,24 +23,42 @@ def make_apps(settings, apps):
     return Application(apps.get_routes(), **settings)
 
 if __name__ == "__main__":
+
     parse_command_line()
     build = Builder()
 
     try:
 
+        yaml = load_yaml_env('env.yaml')
+        root_path = dirname(abspath(__file__))
+
         logger.info('Initialize Typhoon...')
-        configs = build.env('.env', env_name=options.env)
-        build.logs(configs, logger)
+        logger.debug('Env filepath: {}'.format(root_path + '/' + options.env))
 
+        configs = build.env(root_path + '/' + options.env)
+
+        # raise an IOError if .env not found
+        if not configs:
+            raise IOError
+
+        # We need to build our global settings based on current selected
+        # ENV_NAME (DEV, TEST, STAGING, PRODUCTION)
         logger.info('Build settings...')
-        logger.debug('Configs: %s', configs)        
+        settings = build.settings(yaml[os.environ.get('ENV_NAME')])
 
-        settings = build.settings(configs)
+        # merge with motor settings
+        settings.update(motor = mongo.settings())
+
+        # merge with session settings
+        settings.update(session = session.settings())
+
         logger.debug('Settings: %s', settings)
-
         logger.info('Running IOLoop...')
+        logger.info('Listening port: {}'.format(options.port))
+        logger.info('Listening to address: {}'.format(options.addr))
+        
         app = make_apps(settings, apps)
-        app.listen(options.port)
+        app.listen(options.port, options.addr)
 
         IOLoop.current().start()
 
