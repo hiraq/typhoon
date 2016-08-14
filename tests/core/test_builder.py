@@ -33,7 +33,7 @@ class TestBuilder(unittest.TestCase):
     def test_build_settings_raise_key_error(self):
 
         builder = Builder()
-        env = FakeEnvironment({})
+        env = dict()
 
         with self.assertRaises(KeyError):
             builder.settings(env)
@@ -49,12 +49,12 @@ class TestBuilder(unittest.TestCase):
         fake_os.environ = dict_environ
         builder = Builder()
 
-        env = FakeEnvironment({
+        env = {
             'DEBUG': True,
             'COMPRESS_RESPONSE': True,
             'XSRF': False,
             'STATIC_HASH_CACHE': False
-        })
+        }
 
         settings = builder.settings(env)
 

@@ -7,12 +7,13 @@ from tornado.ioloop import IOLoop
 from tornado.options import define, options, parse_command_line
 from apps.registry import apps
 from core.builder import Builder
-from core.environment import Environment
+from core.environment import load_yaml_env
 from core.setting import mongo, session
 
 # Set runtime configurable settings via command line
 define("env", default=".env", help="Set default env file")
 define("port", default=8080, help="Set port to listen all requests")
+define("addr", default="localhost", help="Set ip address to listen")
 
 def make_apps(settings, apps):
     """Application Management
@@ -28,6 +29,7 @@ if __name__ == "__main__":
 
     try:
 
+        yaml = load_yaml_env('env.yaml')
         root_path = dirname(abspath(__file__))
 
         logger.info('Initialize Typhoon...')
@@ -42,7 +44,7 @@ if __name__ == "__main__":
         # We need to build our global settings based on current selected
         # ENV_NAME (DEV, TEST, STAGING, PRODUCTION)
         logger.info('Build settings...')
-        settings = build.settings(Environment(os.environ.get('ENV_NAME')))
+        settings = build.settings(yaml[os.environ.get('ENV_NAME')])
 
         # merge with motor settings
         settings.update(motor = mongo.settings())
@@ -52,9 +54,11 @@ if __name__ == "__main__":
 
         logger.debug('Settings: %s', settings)
         logger.info('Running IOLoop...')
-
+        logger.info('Listening port: {}'.format(options.port))
+        logger.info('Listening to address: {}'.format(options.addr))
+        
         app = make_apps(settings, apps)
-        app.listen(options.port)
+        app.listen(options.port, options.addr)
 
         IOLoop.current().start()
 
