@@ -2,6 +2,7 @@ import pprint
 from tornado import gen
 from core.base import BaseRequestHandler
 from core.container import Container
+from core.router import Router
 from webargs import fields
 
 class MongoHandler(BaseRequestHandler):
@@ -21,10 +22,13 @@ class MongoHandler(BaseRequestHandler):
         docs = yield self.coll.find_one({'email': reqargs['email']})
         pprint.pprint(docs)
 
-        response = dict(
-            object_id = str(docs['_id']),
-            email = docs['email']
-        )
+        if not docs:
+            response = dict()
+        else:
+            response = dict(
+                object_id = str(docs['_id']),
+                email = docs['email']
+            )
 
         self.write(response)
         self.finish()
@@ -46,7 +50,9 @@ class MongoHandler(BaseRequestHandler):
 class MongoApp(Container):
 
     def routes(self):
-        routes = [(r"/mongo", MongoHandler)]
+        with Router(handler=MongoHandler) as routes:
+            routes.register(r"/mongo")
+
         return routes
 
     def name(self):
