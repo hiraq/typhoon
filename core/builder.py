@@ -51,15 +51,15 @@ class Builder(object):
         Raises:
             Raise a KeyError if current configs doesn't have any key value
         """
-        if len(env.configs) < 1:
+        if len(env) < 1:
             raise KeyError
 
         setting = {
-            "debug": env.configs.get('DEBUG'),
-            "compress_response": env.configs.get('COMPRESS_RESPONSE'),
+            "debug": env.get('DEBUG'),
+            "compress_response": env.get('COMPRESS_RESPONSE'),
             "cookie_secret": uuid.uuid1().hex,
-            "xsrf_cookies": env.configs.get('XSRF'),
-            "static_hash_cache": env.configs.get('STATIC_HASH_CACHE'),
+            "xsrf_cookies": env.get('XSRF'),
+            "static_hash_cache": env.get('STATIC_HASH_CACHE'),
             "static_path": os.environ.get('STATIC_PATH'),
             "static_url_prefix": os.environ.get('STATIC_URL_PREFIX')
         }
