@@ -13,10 +13,17 @@ def load_yaml_env(path):
         A dictionary contains of all yaml key values
     """
     output = ''
-    with open(path, 'r') as stream:
-        try:
+    try:
+        with open(path, 'r') as stream:
             output = yaml.load(stream)
-        except yaml.YAMLERROR as exc:
-            output = dict()
+
+    except IOError:
+        output = dict()
+    except Exception:
+        '''
+        I'm using Exception as final exception handling,
+        it's because i cannot catch yaml.YAMLError
+        '''
+        output = dict()
 
     return output
