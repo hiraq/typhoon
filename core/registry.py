@@ -1,5 +1,5 @@
 from core.container import Container
-from core.exceptions.application import ContainerError
+from core.exceptions.core import ContainerError
 
 class Registry:
     """Core.Registry
