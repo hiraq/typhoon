@@ -46,6 +46,9 @@ if __name__ == "__main__":
         logger.info('Build settings...')
         settings = build.settings(yaml[os.environ.get('ENV_NAME')])
 
+        # add root path to application settings
+        settings.update(root_path = root_path)
+
         # merge with motor settings
         settings.update(motor = mongo.settings())
 
@@ -56,7 +59,7 @@ if __name__ == "__main__":
         logger.info('Running IOLoop...')
         logger.info('Listening port: {}'.format(options.port))
         logger.info('Listening to address: {}'.format(options.addr))
-        
+
         app = make_apps(settings, apps)
         app.listen(options.port, options.addr)
 
