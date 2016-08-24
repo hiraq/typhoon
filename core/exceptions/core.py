@@ -40,3 +40,14 @@ class DotenvNotAvailableError(BaseError):
     def __init__(self):
         BaseError.__init__(self)
         self._message = 'Unable to load environment file.'
+
+class UnknownEnvError(BaseError):
+    """Error Unknown Environment Name
+
+    Custom exception that should be triggered when
+    system try to load all environment variables from unspecified
+    environment name.
+    """
+    def __init__(self, name=None):
+        BaseError.__init__(self)
+        self._message = 'Unknown environment name: {}.'.format(name)

@@ -8,7 +8,7 @@ import logging
 from tornado.log import app_log as logger
 from mock import MagicMock, patch
 from core.builder import Builder
-from core.exceptions.core import DotenvNotAvailableError
+from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError
 
 def _test_dotenv(configs):
     if not configs:
@@ -43,8 +43,8 @@ class TestBuilder(unittest.TestCase):
         builder = Builder()
         env = dict()
 
-        with self.assertRaises(KeyError):
-            builder.settings(env)
+        with self.assertRaises(UnknownEnvError):
+            builder.settings(env, 'test')
 
     @patch('core.builder.os')
     def test_build_settings_success(self, fake_os):
