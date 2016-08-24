@@ -1,4 +1,3 @@
-import logging as logger
 from core.container import Container
 from core.exceptions.application import ContainerError
 

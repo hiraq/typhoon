@@ -1,6 +1,6 @@
 from tornado import gen
 from tornado.ioloop import IOLoop
-from tornado.queues import Queue, QueueEmpty
+from tornado.queues import Queue
 
 class TQueue(object):
     """Typhoon Queue Processor

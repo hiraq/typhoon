@@ -1,11 +1,6 @@
 import uuid
-import logging
 import os
 from dotenv import load_dotenv
-from core.session import Session
-from colorlog import ColoredFormatter
-
-logger = logging.getLogger('tornado.general')
 
 class Builder(object):
 
