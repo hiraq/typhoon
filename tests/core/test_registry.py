@@ -9,7 +9,7 @@ from types import *
 from mock import MagicMock
 from core.registry import Registry
 from core.container import Container
-from core.exceptions.application import ContainerError
+from core.exceptions.core import ContainerError
 
 class FakeHandler(object):
     pass

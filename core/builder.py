@@ -1,11 +1,7 @@
 import uuid
-import logging
 import os
 from dotenv import load_dotenv
-from core.session import Session
-from colorlog import ColoredFormatter
-
-logger = logging.getLogger('tornado.general')
+from core.exceptions.core import UnknownEnvError
 
 class Builder(object):
 
@@ -35,7 +31,7 @@ class Builder(object):
         """
         return load_dotenv(env_file)
 
-    def settings(self, env):
+    def settings(self, env, env_name=None):
         """Tornado Settings
 
         Build settings which will loaded by Tornado.  All configuration
@@ -51,8 +47,8 @@ class Builder(object):
         Raises:
             Raise a KeyError if current configs doesn't have any key value
         """
-        if len(env) < 1:
-            raise KeyError
+        if not env:
+            raise UnknownEnvError(name=env_name)
 
         setting = {
             "debug": env.get('DEBUG'),
