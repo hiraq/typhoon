@@ -9,6 +9,7 @@ from apps.registry import apps
 from core.builder import Builder
 from core.environment import load_yaml_env
 from core.setting import mongo, session
+from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError
 
 # Set runtime configurable settings via command line
 define("env", default=".env", help="Set default env file")
@@ -37,14 +38,19 @@ if __name__ == "__main__":
 
         configs = build.env(root_path + '/' + options.env)
 
-        # raise an IOError if .env not found
+        # raise an DotenvNotAvailableError if .env not found
         if not configs:
-            raise IOError
+            raise DotenvNotAvailableError
 
         # We need to build our global settings based on current selected
         # ENV_NAME (DEV, TEST, STAGING, PRODUCTION)
         logger.info('Build settings...')
-        settings = build.settings(yaml[os.environ.get('ENV_NAME')])
+        logger.debug('Environment Name : {}'.format(os.environ.get('ENV_NAME')))
+        env_name = os.environ.get('ENV_NAME')
+        settings = build.settings(yaml.get(env_name), env_name=env_name)
+
+        # add root path to application settings
+        settings.update(root_path = root_path)
 
         # merge with motor settings
         settings.update(motor = mongo.settings())
@@ -56,23 +62,23 @@ if __name__ == "__main__":
         logger.info('Running IOLoop...')
         logger.info('Listening port: {}'.format(options.port))
         logger.info('Listening to address: {}'.format(options.addr))
-        
+
         app = make_apps(settings, apps)
         app.listen(options.port, options.addr)
 
         IOLoop.current().start()
 
-    except IOError:
+    except DotenvNotAvailableError, exc:
         """
         Should be happened when core builder cannot load default dotenv file
         """
-        print 'Unable to load environment file.'
+        print exc.message
         sys.exit()
 
-    except KeyError:
+    except UnknownEnvError, exc:
         """
         Should be happened when core builder try to load unregistered key from
         environment configuration file.
         """
-        print 'Unable to load configuration values.'
+        print exc.message
         sys.exit()
