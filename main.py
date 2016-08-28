@@ -8,7 +8,7 @@ from tornado.options import define, options, parse_command_line
 from apps.registry import apps
 from core.builder import Builder
 from core.environment import load_yaml_env
-from core.setting import mongo, session
+from core.setting import mongo, session, postgres
 from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError
 
 # Set runtime configurable settings via command line
@@ -57,6 +57,9 @@ if __name__ == "__main__":
 
         # merge with session settings
         settings.update(session = session.settings())
+
+        # merge with momoko settings
+        settings.update(momoko = postgres.settings())
 
         logger.debug('Settings: %s', settings)
         logger.info('Running IOLoop...')
