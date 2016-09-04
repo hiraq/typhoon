@@ -65,7 +65,6 @@ if __name__ == "__main__":
 
         app = make_apps(settings, apps)
         app.listen(options.port, options.addr)
-
         IOLoop.current().start()
 
     except DotenvNotAvailableError, exc:
