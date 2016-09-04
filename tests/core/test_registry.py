@@ -11,10 +11,18 @@ from core.registry import Registry
 from core.container import Container
 from core.exceptions.core import ContainerError
 
+def test_cli():
+    pass
+
 class FakeHandler(object):
     pass
 
 class FakeApp1(Container):
+
+    @property
+    def commands(self):
+        return [test_cli]
+
     def routes(self):
         routes = [(r"/testing1", FakeHandler)]
         return routes
@@ -23,6 +31,11 @@ class FakeApp1(Container):
         return "FakeApp1"
 
 class FakeApp2(Container):
+
+    @property
+    def commands(self):
+        return []
+
     def routes(self):
         routes = [(r"/testing2", FakeHandler)]
         return routes
@@ -37,6 +50,11 @@ class FakeApp3(object):
     pass
 
 class FakeApp4(Container):
+
+    @property
+    def commands(self):
+        return []
+
     def routes(self):
         routes = [(r"/testing3", FakeHandler, "testing")]
         return routes
@@ -68,3 +86,20 @@ class TestRegistry(unittest.TestCase):
         exception = container_error.exception
         self.assertEqual('FakeApp3', exception.app_name)
         self.assertEqual('ContainerError: Cannot use FakeApp3 as container application', exception.message)
+
+    def test_container_get_commands(self):
+
+        reg = Registry()
+        reg.register(FakeApp1())
+        reg.register(FakeApp2())
+
+        commands = reg.get_commands()
+        self.assertTrue(len(commands) > 0)
+
+    def test_container_get_commands_empty(self):
+
+        reg = Registry()
+        reg.register(FakeApp2())
+
+        commands = reg.get_commands()
+        self.assertFalse(len(commands) > 0)

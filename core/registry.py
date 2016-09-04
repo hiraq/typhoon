@@ -11,6 +11,7 @@ class Registry:
     def __init__(self):
         self.__apps = []
         self.__routes = []
+        self.__commands = []
 
     def register(self, app):
         """Register application
@@ -33,10 +34,18 @@ class Registry:
             # after app registered, we should parse their routes
             self.__app_routes()
 
+            # parse each of custom commands from each apps
+            self.__app_commands()
+
         except AssertionError:
 
             # raise custom exception to indicate cannot use registered app
             raise ContainerError(app.__class__.__name__)
+
+    def __app_commands(self):
+        for app in self.__apps:
+            if len(app.commands) > 0:
+                self.__commands.extend(app.commands)
 
     def __app_routes(self):
         """Binding routes
@@ -92,3 +101,6 @@ class Registry:
             list of routes from many apps
         """
         return self.__routes
+
+    def get_commands(self):
+        return self.__commands

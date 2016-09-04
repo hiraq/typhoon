@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta, abstractmethod, abstractproperty
 
 class Container:
     """Base Container Application
@@ -9,6 +9,18 @@ class Container:
     - define application name
     """
     __metaclass__ = ABCMeta
+
+    @abstractproperty
+    def commands(self):
+        """
+        Should be used to list all custom cli commands from
+        each apps.  This method should return a list of function
+        that registered with click.
+
+        If current registered apps, doesn't need any custom cli commands,
+        just return an empty list.
+        """
+        pass
 
     @abstractmethod
     def routes(self):
