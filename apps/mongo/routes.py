@@ -49,6 +49,10 @@ class MongoHandler(BaseRequestHandler):
 
 class MongoApp(Container):
 
+    @property
+    def commands(self):
+        return []
+
     def routes(self):
         with Router(handler=MongoHandler) as routes:
             routes.register(r"/mongo")
