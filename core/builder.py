@@ -1,7 +1,7 @@
 import uuid
 import os
 from dotenv import load_dotenv
-from core.exceptions.core import UnknownEnvError
+from core.exceptions.core import UnknownEnvError, DotenvNotAvailableError
 
 class Builder(object):
 
@@ -24,14 +24,14 @@ class Builder(object):
         Args:
             env_file (str): .env that need to load
 
-        Returns:
-            Boolean or None.  Return true if .env file can be loaded and
-            return None if .env file not found.
-
+        Raises:
+            DotenvNotAvailableError : If cannot found any dotenv file
         """
-        return load_dotenv(env_file)
+        dotenv = load_dotenv(env_file)
+        if not dotenv:
+            raise DotenvNotAvailableError
 
-    def settings(self, env, env_name=None):
+    def settings(self, yaml):
         """Tornado Settings
 
         Build settings which will loaded by Tornado.  All configuration
@@ -45,8 +45,12 @@ class Builder(object):
             Dictionaries
 
         Raises:
-            Raise a KeyError if current configs doesn't have any key value
+            Raise a UnknownEnvError if cannot load main tornado settings based on current requested
+            environment name
         """
+        env_name = os.environ.get('ENV_NAME')
+        env = yaml.get(env_name)
+
         if not env:
             raise UnknownEnvError(name=env_name)
 
