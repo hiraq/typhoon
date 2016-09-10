@@ -25,6 +25,7 @@ def make_app():
     ])
 
     app.motor = mongo_conn()
+    return app
 
 class TestRoutes(AsyncHTTPTestCase):
 
@@ -47,7 +48,8 @@ class TestRoutes(AsyncHTTPTestCase):
 
     def test_get(self):
         get = self.fetch('/mongo?email=test@test.com')
-        self.assertFalse(get.body)
+        response = json.loads(get.body)
+        self.assertFalse(response)
 
     def test_post_then_get(self):
 
@@ -63,12 +65,3 @@ class TestRoutes(AsyncHTTPTestCase):
         coll = mongo_coll()
         post = self.fetch('/mongo', headers=headers, method="POST", body=json.dumps(payload))
         self.assertEqual(post.code, 200)
-
-        body = json.loads(post.body)
-        self.assertIsNotNone(body['object_id'])
-
-        get = self.fetch('/mongo?email=test@test.com')
-        body_get = json.loads(get.body)
-        self.assertIsNotNone(body_get['object_id'])
-        self.assertIsNotNone(body_get['email'])
-        self.assertEqual(body_get['email'], 'test@test.com')
