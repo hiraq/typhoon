@@ -4,6 +4,7 @@ from core.base import BaseRequestHandler
 from core.container import Container
 from core.router import Router
 from webargs import fields
+from tornado.log import app_log as logger
 
 class MongoHandler(BaseRequestHandler):
 
@@ -12,7 +13,7 @@ class MongoHandler(BaseRequestHandler):
     }
 
     def initialize(self):
-        self.motor = self.settings['motor']
+        self.motor = self.application.motor
         self.db = self.motor.testing_db
         self.coll = self.db.testing_coll
 
@@ -38,7 +39,6 @@ class MongoHandler(BaseRequestHandler):
         reqargs = self.parse_request(self.mongo_handler_args)
         future = self.coll.insert({'email': reqargs['email']})
         result = yield future
-        pprint.pprint(result)
 
         response = dict(
             object_id = str(result)
