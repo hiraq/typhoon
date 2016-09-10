@@ -23,6 +23,9 @@ class Builder(object):
 
         Args:
             env_file (str): .env that need to load
+
+        Raises:
+            DotenvNotAvailableError : If cannot found any dotenv file
         """
         dotenv = load_dotenv(env_file)
         if not dotenv:
@@ -42,11 +45,12 @@ class Builder(object):
             Dictionaries
 
         Raises:
-            Raise a KeyError if current configs doesn't have any key value
+            Raise a UnknownEnvError if cannot load main tornado settings based on current requested
+            environment name
         """
         env_name = os.environ.get('ENV_NAME')
         env = yaml.get(env_name)
-        
+
         if not env:
             raise UnknownEnvError(name=env_name)
 
