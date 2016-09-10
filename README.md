@@ -9,7 +9,7 @@ You can call _Typhoon_ as a bootstrapper and application manager for web applica
 Latest release branch always at `master` branch.  Development branch always at `dev`.
 
 ```
-Alpha: 0.6.0
+Alpha: 0.6.1
 ```
 Supported Python versions : `2.7.x`.
 
