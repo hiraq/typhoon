@@ -26,17 +26,14 @@ class TestBuilder(unittest.TestCase):
         load_dotenv.return_value = None
         builder = Builder()
 
-        self.assertIsNone(builder.env('testing'))
-
         with self.assertRaises(DotenvNotAvailableError):
-            _test_dotenv(builder.env('testing'))
+            builder.env('testing')
 
     @patch('core.builder.load_dotenv')
     def test_load_env_success(self, load_dotenv):
         load_dotenv.return_value = True
         builder = Builder()
-
-        self.assertTrue(builder.env('testing'))
+        builder.env('testing')
 
     def test_build_settings_raise_key_error(self):
 
@@ -44,12 +41,13 @@ class TestBuilder(unittest.TestCase):
         env = dict()
 
         with self.assertRaises(UnknownEnvError):
-            builder.settings(env, 'test')
+            builder.settings(env)
 
     @patch('core.builder.os')
     def test_build_settings_success(self, fake_os):
 
         dict_environ = {
+            'ENV_NAME': 'TEST',
             'STATIC_PATH': '/testing',
             'STATIC_URL_PREFIX': '/testing_prefix'
         }
@@ -58,10 +56,12 @@ class TestBuilder(unittest.TestCase):
         builder = Builder()
 
         env = {
-            'DEBUG': True,
-            'COMPRESS_RESPONSE': True,
-            'XSRF': False,
-            'STATIC_HASH_CACHE': False
+            'TEST': {
+                'DEBUG': True,
+                'COMPRESS_RESPONSE': True,
+                'XSRF': False,
+                'STATIC_HASH_CACHE': False
+            }
         }
 
         settings = builder.settings(env)
