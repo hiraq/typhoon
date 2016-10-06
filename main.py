@@ -9,7 +9,7 @@ from core.application import Application as Typhoon
 from core.builder import Builder
 from core.environment import load_yaml_env
 from core.setting import mongo, session
-from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError
+from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError, ComponentError
 
 # Set runtime configurable settings via command line
 define("env", default=".env", help="Set default env file")
@@ -103,6 +103,13 @@ if __name__ == "__main__":
 
         typhoon.listen(options.port, options.addr)
         IOLoop.current().start()
+
+    except ComponentError, exc:
+        """
+        Should be triggered when application cannot install requested component
+        """
+        print exc.message
+        sys.exit()
 
     except DotenvNotAvailableError, exc:
         """
