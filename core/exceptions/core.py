@@ -30,6 +30,17 @@ class ContainerError(BaseError):
     def app_name(self):
         return self._app_name
 
+class ComponentError(BaseError):
+    """Error Component
+
+    Should be triggered when cannot initialize component object,
+    or given component object is not instance from Component abstract
+    class.
+    """
+    def __init__(self, com_name):
+        BaseError.__init__(self)
+        self._message = "ComponentError: Cannot use {} as component object".format(com_name)
+
 class DotenvNotAvailableError(BaseError):
     """Error Dotenv
 
