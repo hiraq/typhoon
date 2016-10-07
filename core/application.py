@@ -1,6 +1,7 @@
 from tornado.web import Application as TornadoApp
+from tornado.log import app_log as logger
 from core.component import Component as ComponentAbstract
-from core.exceptions.core import ContainerError
+from core.exceptions.core import ComponentError
 
 class Application(TornadoApp):
     """Typhoon Core Application
@@ -56,9 +57,14 @@ class Application(TornadoApp):
         # check if given component object is an instance of Component
         # abstract class or not
         if not isinstance(component, ComponentAbstract):
-            raise ContainerError(component.__class__.__name__)
+            raise ComponentError(component.__class__.__name__)
 
         # install the component and register it into
         # self.components
         component.install()
-        self.__components.append({alias: component})
+        self.__components.append((alias, component))
+
+    def load_components(self, context):
+        if len(self.__components) > 0:
+            for component in self.__components:
+                setattr(context, component[0], component[1].initialize())

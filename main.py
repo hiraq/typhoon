@@ -8,8 +8,10 @@ from apps.registry import apps
 from core.application import Application as Typhoon
 from core.builder import Builder
 from core.environment import load_yaml_env
-from core.setting import mongo, session
+from core.setting import session
 from core.exceptions.core import DotenvNotAvailableError, UnknownEnvError, ComponentError
+
+from component.mongo import Mongo as ComMongo
 
 # Set runtime configurable settings via command line
 define("env", default=".env", help="Set default env file")
@@ -99,7 +101,9 @@ if __name__ == "__main__":
         # register root_path and motor as object property
         typhoon = Typhoon(apps.get_routes(), **settings)
         setattr(typhoon, 'root_path', root_path)
-        setattr(typhoon, 'motor', mongo.settings())
+
+        # install Motor component
+        typhoon.install(ComMongo(), 'mongo')
 
         typhoon.listen(options.port, options.addr)
         IOLoop.current().start()

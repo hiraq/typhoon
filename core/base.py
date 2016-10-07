@@ -1,4 +1,5 @@
 from tornado.web import RequestHandler
+from tornado.log import app_log as logger
 from torndsession.session import SessionMixin
 from webargs.tornadoparser import parser
 
@@ -10,8 +11,8 @@ class BaseRequestHandler(RequestHandler, SessionMixin):
     to manage all session things.
     """
 
-    def prepare(self):
-        pass
+    def initialize(self):
+        self.application.load_components(self)
 
     def on_finish(self):
         """

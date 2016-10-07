@@ -9,6 +9,8 @@ from tornado.testing import AsyncHTTPTestCase
 from motor.motor_tornado import MotorClient
 from apps.mongo.routes import MongoHandler
 from tornado.log import app_log as logger
+from core.application import Application as Typhoon
+from component.mongo import Mongo as ComMongo
 
 def mongo_conn():
     # Use default host & port, just for testing
@@ -20,11 +22,11 @@ def mongo_coll():
 
 def make_app():
 
-    app = Application([
+    app = Typhoon([
         (r"/mongo", MongoHandler)
     ])
 
-    app.motor = mongo_conn()
+    app.install(ComMongo(), 'mongo')
     return app
 
 class TestRoutes(AsyncHTTPTestCase):
