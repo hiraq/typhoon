@@ -27,7 +27,7 @@ class Router(Iterator, Sized):
         self.prefix = group
         self.handler = handler
 
-    def register(self, endpoint):
+    def register(self, endpoint, name=None):
         """Register Route
 
         Used for register new endpoint
@@ -36,7 +36,7 @@ class Router(Iterator, Sized):
             endpoint : A string endpoint path
         """
         endpoint = endpoint if not self.prefix else self.prefix + endpoint
-        self.routes.append((endpoint, self.handler))
+        self.routes.append((endpoint, self.handler, name))
 
     def next(self):
         """Next Iteration
