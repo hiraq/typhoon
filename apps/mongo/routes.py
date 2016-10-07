@@ -55,7 +55,7 @@ class MongoApp(Container):
 
     def routes(self):
         with Router(handler=MongoHandler) as routes:
-            routes.register(r"/mongo")
+            routes.register(r"/mongo", name='mongo_url')
 
         return routes
 
