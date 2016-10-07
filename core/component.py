@@ -36,6 +36,6 @@ class Component:
         just pass it.
 
         Returns:
-            Void
+            Void or some objects
         """
         pass
