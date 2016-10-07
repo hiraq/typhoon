@@ -1,5 +1,6 @@
 import pprint
 from tornado import gen
+from tornado.log import app_log as logger
 from core.base import BaseRequestHandler
 from core.container import Container
 from core.router import Router
@@ -13,7 +14,8 @@ class MongoHandler(BaseRequestHandler):
     }
 
     def initialize(self):
-        self.motor = self.application.motor
+        super(MongoHandler, self).initialize()
+        self.motor = self.mongo
         self.db = self.motor.testing_db
         self.coll = self.db.testing_coll
 
